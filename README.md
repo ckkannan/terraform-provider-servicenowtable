@@ -1,33 +1,5 @@
-# Terraform Provider Hashicups
+# Terraform Provider servicenowtable
 
-This repo is a companion repo to the [Call APIs with Terraform Providers](https://learn.hashicorp.com/collections/terraform/providers) Learn collection. 
+This repo contain servicenow table data source provided. Using this provider given servicenow table query and return the data.
 
-In the collection, you will use the HashiCups provider as a bridge between Terraform and the HashiCups API. Then, extend Terraform by recreating the HashiCups provider. By the end of this collection, you will be able to take these intuitions to create your own custom Terraform provider. 
 
-## Build provider
-
-Run the following command to build the provider
-
-```shell
-$ go build -o terraform-provider-hashicups
-```
-
-## Test sample configuration
-
-First, build and install the provider.
-
-```shell
-$ make install
-```
-
-Then, navigate to the `examples` directory. 
-
-```shell
-$ cd examples
-```
-
-Run the following command to initialize the workspace and apply the sample configuration.
-
-```shell
-$ terraform init && terraform apply
-```

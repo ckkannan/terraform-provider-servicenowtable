@@ -1,4 +1,4 @@
-module terraform-provider-hashicups-pf
+module terraform-provider-servicenowtable
 
 go 1.18
 
