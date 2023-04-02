@@ -1,11 +1,23 @@
 terraform {
   required_providers {
     servicenowtable = {
-        source = "hashicorp.com/edu/servicenowtable"
+      source = "ckkannan/servicenowtable"
     }
   }
 }
 
-provider "servicenowtable" {}
+provider "servicenowtable" {
+  sn_url  = "https://dev161016.service-now.com"
+  sn_user = "admin"
+  sn_pass = "@6zeg6GETWFiTze/"
+  sn_auth = "Basic"
+}
 
-data "servicenowtable_query" "query" {}
+data "servicenowtable_queryorg" "query" {
+
+}
+
+
+output "myout" {
+  value = data.servicenowtable_queryorg.query
+}
