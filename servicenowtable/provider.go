@@ -4,7 +4,8 @@ import (
 	"context"
 	"os"
 
-	"github.com/ckkannan/servicenowtable_client"
+	"ckkannan/servicenowtable_client"
+
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/provider"

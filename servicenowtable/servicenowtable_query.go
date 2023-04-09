@@ -2,9 +2,12 @@ package servicenowtable
 
 import (
 	"context"
+	"fmt"
+
 	// "fmt"
 
-	"github.com/ckkannan/servicenowtable_client"
+	"ckkannan/servicenowtable_client"
+
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -21,9 +24,13 @@ func NewServiceNowTableDataSource() datasource.DataSource {
 	return &serviceNowTableDataSource{}
 }
 
+// type servicenowTableOrgSourceModel struct {
+// 	orgRows map[string]orgrowModel
+// }
+
 type servicenowTableOrgSourceModel struct {
-	OrgRows []orgrowModel `tfsdk:"datarows"`
-	ID      types.String  `tfsdk:"id"`
+	// Id      string                 `tfsdk:"id"`
+	OrgRows map[string]orgrowModel `tfsdk:"datarows"`
 }
 
 type orgrowModel struct {
@@ -53,11 +60,10 @@ func (d *serviceNowTableDataSource) Metadata(_ context.Context, req datasource.M
 func (d *serviceNowTableDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
-			"id": schema.StringAttribute{
-				Description: "Placeholder identifier attribute.",
-				Computed:    true,
-			},
-			"datarows": schema.ListNestedAttribute{
+			// "id": schema.StringAttribute{
+			// 	Computed: true,
+			// },
+			"datarows": schema.MapNestedAttribute{
 				Computed: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -81,7 +87,11 @@ func (d *serviceNowTableDataSource) Schema(_ context.Context, _ datasource.Schem
 }
 
 func (d *serviceNowTableDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	// var state servicenowTableOrgSourceModel
+	// state := make(map[string]orgrowModel)
 	var state servicenowTableOrgSourceModel
+	// var state map[string]orgrowModel
+
 	tflog.Info(ctx, "Configuring Tables client")
 	d.client.Table = "x_22541_terraform_organization"
 	d.client.Query = ""
@@ -93,19 +103,22 @@ func (d *serviceNowTableDataSource) Read(ctx context.Context, req datasource.Rea
 		return
 	}
 
-	for _, r := range servicenowtablerows {
+	// var f servicenowTableOrgSourceModel
+	state.OrgRows = make(map[string]orgrowModel, len(servicenowtablerows))
+	for k, r := range servicenowtablerows {
 		rowState := orgrowModel{
 			Sys_id:      types.StringValue(r.Sys_id),
 			To_adgroup:  types.StringValue(r.To_adgroup),
 			To_org_name: types.StringValue(r.To_org_name),
 			To_org_type: types.StringValue(r.To_org_type),
 		}
-		// ctx = tflog.SetField(ctx, "Mine value", servicenowtablerows[0].To_adgroup)
-		state.OrgRows = append(state.OrgRows, rowState)
+		fmt.Println("ROWSCK ", k, rowState.To_adgroup)
+
+		// state.Id = k
+		state.OrgRows[k] = rowState
 
 	}
-	state.ID = types.StringValue("placeholder")
-	///ctx = tflog.SetField(ctx, "Mine value",)
+	// path.Root("datarows")
 	tflog.Debug(ctx, "Creating HashiCups client")
 
 	diags := resp.State.Set(ctx, &state)
